@@ -1,6 +1,6 @@
 __author__ = 'rakot'
 
-from models import Beacon, Point, Object
+from models import Beacon, InnerPoint, Object
 from rest_framework import serializers
 
 

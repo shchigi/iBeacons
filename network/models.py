@@ -2,7 +2,47 @@
 
 from django.db import models
 from django.core.exceptions import ValidationError
-# Create your moels here.
+# Create your models here.
+
+
+# describes points at streets like malls, business centers, etc
+class OuterPoint(models.Model):
+    lat = models.DecimalField(max_digits=11, decimal_places=8)
+    lng = models.DecimalField(max_digits=11, decimal_places=8)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=255, null=False, blank=False)
+
+    def __unicode__(self):
+        s = "" if self.description is None else self.description
+        return unicode("%s; \n%s" % (self.name, s))
+
+
+class Object(models.Model):
+    description = models.CharField(max_length=255, null=True)
+    description_far = models.CharField(max_length=255, null=False)
+    description_near = models.CharField(max_length=255, null=False)
+    description_immediate = models.CharField(max_length=255, null=False)
+    outer_point = models.ForeignKey('OuterPoint', null=False, blank=False)
+#   points available via object.point_set.all()
+
+    def __unicode__(self):
+        return self.description
+
+
+# Describes points inside mall, business center, etc.
+# Coordinates are for local coordinate system
+# z included to indicate floors
+class InnerPoint(models.Model):
+    x = models.FloatField(default=0, null=False)
+    y = models.FloatField(default=0, null=False)
+    z = models.FloatField(default=0, null=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    # This is for one to many relationship with Object
+    related_object = models.ForeignKey('Object', null=False, blank=False)
+
+    def __unicode__(self):
+        s = "" if self.description is None else self.description
+        return unicode("%s. (%f, %f, %f)" % (s, self.x, self.y, self.z))
 
 
 class Beacon(models.Model):
@@ -10,40 +50,8 @@ class Beacon(models.Model):
     major = models.IntegerField()
     minor = models.IntegerField()
     frequency = models.BigIntegerField(null=True, blank=True)
-    object = models.ForeignKey('Object')
     description = models.CharField(max_length=255)
-    point = models.ForeignKey('Point', null=True, blank=True)
+    point = models.OneToOneField('InnerPoint', null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.description)
-
-    def clean(self):
-        if self.object_id is None and self.point_id is None:
-            raise ValidationError("Object and Point are both null for %s %d %d beacon" % (self.uuid, self.major, self.minor))
-        if self.object_id is not None and self.point_id is not None:
-            raise ValidationError("Both Object and Point exist for beacon %s %d %d beacon" % (self.uuid, self.major, self.minor))
-        return
-
-
-class Point(models.Model):
-    x = models.FloatField(default=0, null=False)
-    y = models.FloatField(default=0, null=False)
-    z = models.FloatField(default=0, null=False)
-    description = models.CharField(max_length=255, null=True, blank=True)
-
-    def __unicode__(self):
-        s = ""
-        if self.description is not None:
-            s = self.description
-        return unicode("%s. (%f, %f, %f)" % (s, self.x, self.y, self.z))
-
-
-class Object(models.Model):
-    description = models.CharField(max_length=255, null=True)
-    descriptionFar = models.CharField(max_length=255, null=False)
-    descriptionNear = models.CharField(max_length=255, null=False)
-    descriptionImmediate = models.CharField(max_length=255, null=False)
-    point = models.ForeignKey('Point')
-
-    def __unicode__(self):
-        return self.description
