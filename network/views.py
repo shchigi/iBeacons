@@ -2,7 +2,7 @@
 
 from rest_framework.decorators import api_view
 from network.models import Beacon, InnerPoint, Object
-from rest_api_handler import JSONResponse
+from rest_api_handler import JSONResponse, ObjectSerializer
 from django.core.exceptions import ObjectDoesNotExist
 
 @api_view(['GET'])
@@ -26,12 +26,13 @@ def objects_from_beacons(request, uuid, major, minor):
     # serializer = BeaconSerializer(data=data)
     # if serializer.is_valid():
     #     return JSONResponse(serializer.data, status=201)
-
+    # request.encoding = 'utf-8'
     try:
         beacon = Beacon.objects.get(uuid=uuid, major=major, minor=minor)
         inner_point = InnerPoint.objects.get(beacon=beacon)
         object = Object.objects.get(innerpoint=inner_point)
-        return JSONResponse(object.__unicode__(), status=200)
+        serializer = ObjectSerializer(object)
+        return JSONResponse(serializer.data, status=200)
     except ObjectDoesNotExist as e:
         return JSONResponse(e.message, status=404)
 
