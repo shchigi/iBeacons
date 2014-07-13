@@ -15,7 +15,7 @@ urlpatterns = patterns('',
    # Uncomment the next line to enable the admin:
    url(r'^admin/', include(admin.site.urls)),
 
-   url(r'^iBeacon/', include('network.urls')),
+   url(r'^', include('network.urls')),
 
 
 )
