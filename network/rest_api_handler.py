@@ -3,7 +3,7 @@ __author__ = 'rakot'
 from models import Beacon, Object
 from rest_framework import serializers
 from django.http import HttpResponse
-from rest_framework.renderers import JSONRenderer
+from rest_framework.renderers import UnicodeJSONRenderer
 
 
 class JSONResponse(HttpResponse):
@@ -11,7 +11,7 @@ class JSONResponse(HttpResponse):
     An HttpResponse that renders its content into JSON.
     """
     def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
+        content = UnicodeJSONRenderer().render(data)
         kwargs['content_type'] = 'application/json; indent=4; charset=utf-8'
         super(JSONResponse, self).__init__(content, **kwargs)
 
