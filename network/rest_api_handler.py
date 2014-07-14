@@ -12,7 +12,7 @@ class JSONResponse(HttpResponse):
     """
     def __init__(self, data, **kwargs):
         content = UnicodeJSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json; indent=4; charset=utf-8'
+        kwargs['content_type'] = 'application/json; indent=4'
         super(JSONResponse, self).__init__(content, **kwargs)
 
 

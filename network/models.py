@@ -13,8 +13,7 @@ class OuterPoint(models.Model):
     name = models.CharField(max_length=255, null=False, blank=False)
 
     def __unicode__(self):
-        s = "" if self.description is None else self.description
-        return unicode("%s; \n%s" % (self.name, s))
+        return unicode("%s; \n%s" % (self.name, self.description or ""))
 
 
 class Object(models.Model):
@@ -41,8 +40,7 @@ class InnerPoint(models.Model):
     related_object = models.ForeignKey('Object', null=False, blank=False)
 
     def __unicode__(self):
-        s = "" if self.description is None else self.description
-        return unicode("%s. (%f, %f, %f)" % (s, self.x, self.y, self.z))
+        return unicode("%s. (%f, %f, %f)" % (self.description or "", self.x, self.y, self.z))
 
 
 class Beacon(models.Model):
@@ -55,3 +53,33 @@ class Beacon(models.Model):
 
     def __unicode__(self):
         return unicode(self.description)
+
+
+class Person(models.Model):
+    first_name = models.CharField(max_length=255, null=False, blank=False)
+    middle_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=False, blank=False)
+    twitter_account = models.CharField(max_length=255, null=True, blank=True)
+    description = models.CharField(max_length=4095, null=True, blank=True)
+
+    def __unicode__(self):
+        return unicode("%s %s %s" % (self.first_name, self.middle_name or "", self.last_name))
+
+class Category(models.Model):
+    description = models.CharField(max_length=255, null=True, blank=True)
+    tag = models.CharField(max_length=255, null=False, blank=False)
+
+    def __unicode__(self):
+        return unicode(self.tag)
+
+
+class Event(models.Model):
+    time_start = models.DateTimeField(null=False, blank=False)
+    time_finish = models.DateTimeField(null=False, blank=False)
+    category = models.ForeignKey(Category, null=True, blank=True)
+    inner_point = models.ForeignKey(InnerPoint, null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    speaker = models.ManyToManyField(Person, null=True, blank=True)
+
+    def __unicode__(self):
+        pass
