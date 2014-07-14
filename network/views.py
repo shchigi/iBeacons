@@ -35,4 +35,3 @@ def objects_from_beacons(request, uuid, major, minor):
         return JSONResponse(serializer.data, status=200)
     except ObjectDoesNotExist as e:
         return JSONResponse(e.message, status=404)
-
