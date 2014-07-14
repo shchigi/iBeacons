@@ -1,5 +1,3 @@
-from django.contrib.admindocs.views import extract_views_from_urlpatterns
-
 __author__ = 'rakot'
 
 from django.conf.urls import patterns, url, include
