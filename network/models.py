@@ -49,7 +49,7 @@ class Beacon(models.Model):
     minor = models.IntegerField()
     frequency = models.BigIntegerField(null=True, blank=True)
     description = models.CharField(max_length=255)
-    point = models.OneToOneField('InnerPoint', null=True, blank=True)
+    point = models.ForeignKey('InnerPoint', null=True, blank=True)
 
     def __unicode__(self):
         return unicode(self.description)
