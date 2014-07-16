@@ -29,4 +29,5 @@ class ObjectSerializer(serializers.ModelSerializer):
         fields = ('description',
                   'description_near',
                   'description_far',
-                  'description_immediate')
+                  'description_immediate',
+                  'id')
