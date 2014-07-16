@@ -9,7 +9,7 @@ import json
 @api_view(['GET'])
 def beacon_uuids(request, format=None):
     if request.method == 'GET':
-        uuids = {"uuids" : list(Beacon.objects.values_list('uuid', flat=True).distinct())}
+        uuids = {"uuids": list(Beacon.objects.values_list('uuid', flat=True).distinct())}
         return JSONResponse(uuids, status=200)
 
 
