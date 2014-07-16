@@ -1,7 +1,8 @@
 # Create your views here.
 
 from rest_framework.decorators import api_view
-from network.models import Beacon, InnerPoint, Object
+from network.models import Beacon, InnerPoint, Object, Event
+from network.rest_api_handler import EventSerializer
 from rest_api_handler import JSONResponse, ObjectSerializer
 from django.core.exceptions import ObjectDoesNotExist
 import json
@@ -34,5 +35,20 @@ def objects_from_beacons(request, uuid, major, minor):
         object = Object.objects.get(innerpoint=inner_point)
         serializer = ObjectSerializer(object)
         return JSONResponse(serializer.data, status=200)
+    except ObjectDoesNotExist as e:
+        return JSONResponse(e.message, status=404)
+
+def events_from_object(request, object_id):
+    try:
+        object = Object.objects.get(id=object_id)
+        inner_poins = object.innerpoint_set.all()
+        events = []
+        for inner_point in inner_poins:
+            e = Event.objects.filter(inner_point=inner_point)
+            events.extend(e)
+        print events
+        serializer = EventSerializer(events, many=True)
+        print "******"
+        return JSONResponse({"events": serializer.data}, status=200)
     except ObjectDoesNotExist as e:
         return JSONResponse(e.message, status=404)

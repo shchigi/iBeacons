@@ -16,6 +16,9 @@ urlpatterns = patterns('',
         'network.views.objects_from_beacons',
         name='objects_from_beacons'),
 
+    url(r'events/(?P<object_id>\d+?)/$',
+        'network.views.events_from_object')
+
 )
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
