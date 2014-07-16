@@ -82,4 +82,5 @@ class Event(models.Model):
     speaker = models.ManyToManyField(Person, null=True, blank=True)
 
     def __unicode__(self):
-        pass
+        return "%s. %s" % (self.category or "", self.description or "")
+
