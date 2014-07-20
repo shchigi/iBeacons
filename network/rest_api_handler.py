@@ -1,6 +1,6 @@
 __author__ = 'rakot'
 
-from models import Beacon, Object
+from models import Beacon, Object, Event, Person
 from rest_framework import serializers
 from django.http import HttpResponse
 from rest_framework.renderers import UnicodeJSONRenderer
@@ -23,6 +23,7 @@ class BeaconSerializer(serializers.ModelSerializer):
                   'major',
                   'minor')
 
+
 class ObjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Object
@@ -31,3 +32,24 @@ class ObjectSerializer(serializers.ModelSerializer):
                   'description_far',
                   'description_immediate',
                   'id')
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ('time_start',
+                  'time_finish',
+                  'category',
+                  'inner_point',
+                  'description',
+                  'speaker')
+
+
+class PersonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ('first_name',
+                  'middle_name',
+                  'last_name',
+                  'twitter_account',
+                  'description')
